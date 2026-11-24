@@ -1,0 +1,38 @@
+/* Slide-in left menu (classes start with sm-). The panel uses the dashboard's colour tokens
+   (styles.css), so it looks like the dashboard sidebar in light and dark mode. */
+.sm-toggle {
+  width: 44px; height: 44px; border-radius: 10px; border: 1px solid #dde3df; background: #fff; cursor: pointer;
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; flex-shrink: 0; padding: 0;
+}
+.sm-toggle span { display: block; width: 20px; height: 2px; border-radius: 2px; background: #22302b; }
+.sm-toggle:hover { background: #f5f6f3; }
+.sm-toggle:focus-visible { outline: 3px solid #c8a165; outline-offset: 2px; }
+
+.sm-backdrop { position: fixed; inset: 0; background: rgba(10, 16, 14, .45); opacity: 0; pointer-events: none; transition: opacity .2s ease; z-index: 1000; }
+.sm-backdrop.open { opacity: 1; pointer-events: auto; }
+
+.sm-panel {
+  position: fixed; top: 0; left: 0; bottom: 0; height: 100vh; width: 260px; max-width: 85vw; z-index: 1001;
+  background: var(--surface, #fff); color: var(--text, #22302b); border-right: 1px solid var(--border, #dde3df);
+  box-shadow: 6px 0 24px rgba(0, 0, 0, .18);
+  transform: translateX(-100%); transition: transform .22s ease; display: flex; flex-direction: column; padding: 16px 12px;
+  font: 14px/1.45 'Segoe UI', system-ui, sans-serif;
+}
+/* Hidden panels are also invisible, so Tab can't reach their links */
+.sm-panel:not(.open) { visibility: hidden; transition: transform .22s ease, visibility 0s linear .22s; }
+.sm-panel.open { transform: none; }
+.sm-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px 20px; }
+.sm-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; }
+.sm-mark { width: 30px; height: 30px; border-radius: 8px; background: var(--primary, #2f5d50); color: var(--primary-ink, #fff); display: grid; place-items: center; }
+.sm-close { width: 34px; height: 34px; border-radius: 8px; border: 0; background: transparent; font-size: 24px; line-height: 1; color: var(--muted, #66736e); cursor: pointer; }
+.sm-close:hover { background: var(--bg, #f5f6f3); color: var(--text, #22302b); }
+.sm-nav { display: flex; flex-direction: column; gap: 2px; }
+.sm-link { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; color: var(--text, #22302b); text-decoration: none; font-weight: 500; }
+.sm-link:hover { background: var(--bg, #f5f6f3); text-decoration: none; }
+.sm-link.active { background: var(--primary-soft, #e3eee9); color: var(--primary, #2f5d50); }
+.sm-icon { width: 18px; text-align: center; }
+.sm-panel a:focus-visible, .sm-close:focus-visible { outline: 2px solid var(--primary, #2f5d50); outline-offset: 1px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sm-panel, .sm-backdrop { transition: none; }
+}
