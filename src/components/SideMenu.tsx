@@ -53,7 +53,8 @@ export default function SideMenu({ className = '' }: Readonly<{ className?: stri
       <aside id="side-menu" ref={panelRef} className={`sm-panel${open ? ' open' : ''}`} aria-label="Dashboard menu" aria-hidden={!open}>
         <div className="sm-head">
           <span className="sm-brand">
-            <span className="sm-mark">M</span> Meta Dashboard
+            <strong>Devlin</strong>
+            <small>Staff dashboard</small>
           </span>
           <button type="button" className="sm-close" aria-label="Close menu" onClick={() => setOpen(false)}>
             ×

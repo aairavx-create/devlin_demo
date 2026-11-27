@@ -16,7 +16,7 @@
 .ca .btn.ghost { background: transparent; }
 .ca .btn.small { height: 28px; padding: 0 10px; font-size: 12px; }
 
-.ca .pill.warn { background: var(--warn-bg); color: var(--warn); border-color: transparent; }
+.ca .pill.warn { background: var(--tape); color: var(--tape-ink); border-color: transparent; }
 .ca .pill.info { background: var(--ca-accent-soft); color: var(--ca-accent); border-color: transparent; }
 .ca .pill.good { background: var(--good-bg); color: var(--good); border-color: var(--good); }
 .ca .pill.violet { background: var(--ca-violet-soft); color: var(--ca-violet); border-color: transparent; }
@@ -33,7 +33,7 @@
 /* Fixed-height box: the chat list and the message area scroll inside it, the reply box stays at the bottom. */
 .ca .inbox {
   display: grid; grid-template-columns: 290px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr);
-  height: clamp(420px, calc(100vh - 330px), 680px); border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+  height: clamp(420px, calc(100vh - 330px), 680px); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface);
 }
 .ca .conv-list { list-style: none; margin: 0; padding: 0; overflow-y: auto; min-height: 0; border-right: 1px solid var(--border); }
 .ca .conv {
@@ -41,7 +41,8 @@
   background: var(--surface); color: var(--text); padding: 10px 12px; cursor: pointer; font: inherit;
 }
 .ca .conv:hover { background: var(--bg); }
-.ca .conv.active { background: var(--primary-soft); }
+.ca .conv { box-shadow: inset 3px 0 0 transparent; }
+.ca .conv.active { background: var(--primary-soft); box-shadow: inset 3px 0 0 var(--primary); }
 .ca .conv-top { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
 .ca .conv-snippet { color: var(--muted); font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ca .conv-time { color: var(--muted); font-size: 11.5px; }
@@ -52,7 +53,7 @@
 .ca .th-msgs { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; background: var(--bg); }
 .ca .tm { max-width: 80%; }
 .ca .tm-from { font-size: 11.5px; color: var(--muted); margin-bottom: 2px; }
-.ca .tm-text { padding: 8px 12px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); white-space: pre-wrap; }
+.ca .tm-text { padding: 8px 12px; border-radius: 6px; background: var(--surface); border: 1px solid var(--border); white-space: pre-wrap; }
 .ca .tm-customer { align-self: flex-start; }
 .ca .tm-bot, .ca .tm-staff { align-self: flex-end; }
 .ca .tm-bot .tm-from, .ca .tm-staff .tm-from { text-align: right; }
@@ -62,7 +63,7 @@
 .ca .inbox-empty { padding: 30px; text-align: center; color: var(--muted); }
 
 .ca .status-select { height: 30px; min-width: 0; font-size: 12.5px; padding: 0 8px; }
-.ca .status-select.new { border-color: var(--warn); color: var(--warn); }
+.ca .status-select.new { border-color: var(--tape); background: var(--tape-soft); color: var(--text); font-weight: 600; }
 .ca .status-select.contacted { border-color: var(--primary); color: var(--primary); }
 .ca .status-select.closed { color: var(--muted); }
 
@@ -84,25 +85,25 @@
 .adm-calendar .rdp-month_caption { font-weight: 700; }
 .adm-calendar .rdp-weekday { font-size: 12px; color: var(--muted); }
 .adm-calendar .rdp-disabled { opacity: .35; }
-.adm-calendar .rdp-day_button { position: relative; border-radius: 50%; }
+.adm-calendar .rdp-day_button { position: relative; border-radius: 4px; font-variant-numeric: tabular-nums; }
 .adm-calendar .d-booked .rdp-day_button::after {
   content: ''; position: absolute; bottom: 4px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: var(--primary);
 }
 .adm-calendar .d-full .rdp-day_button { background: var(--primary-soft); color: var(--primary); font-weight: 700; }
-.adm-calendar .d-part .rdp-day_button { box-shadow: inset 0 0 0 2px var(--warn); }
+.adm-calendar .d-part .rdp-day_button { box-shadow: inset 0 0 0 2px var(--tape); }
 .adm-calendar .d-blocked .rdp-day_button {
   background: repeating-linear-gradient(135deg, var(--border) 0 4px, transparent 4px 8px); color: var(--muted); text-decoration: line-through;
 }
 .adm-calendar .rdp-selected .rdp-day_button { text-decoration: none; }
 .cal-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font-size: 12px; color: var(--muted); }
 .cal-legend span { display: inline-flex; align-items: center; gap: 6px; }
-.sw { width: 14px; height: 14px; border-radius: 50%; display: inline-block; border: 1px solid var(--border); position: relative; }
+.sw { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1px solid var(--border); position: relative; }
 .sw-open { background: var(--surface); }
 .sw-booked::after { content: ''; position: absolute; bottom: 1px; left: 50%; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: var(--primary); }
 .sw-full { background: var(--primary-soft); border-color: var(--primary); }
-.sw-part { box-shadow: inset 0 0 0 2px var(--warn); }
+.sw-part { box-shadow: inset 0 0 0 2px var(--tape); }
 .sw-blocked { background: repeating-linear-gradient(135deg, var(--muted) 0 2px, transparent 2px 4px); }
-.slot-panel { border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+.slot-panel { border: 1px solid var(--border); border-top: 2px solid var(--text); border-radius: 0 0 var(--radius) var(--radius); padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
 .slot-panel h3 { margin: 0; font-size: 15px; }
 .slot-panel h4 { margin: 0 0 6px; font-size: 13px; color: var(--muted); font-weight: 600; }
 .slot-panel p { margin: 0; }
@@ -114,7 +115,7 @@
 .day-slots li { display: flex; align-items: center; gap: 10px; }
 .slot-time { width: 60px; font-variant-numeric: tabular-nums; font-weight: 600; }
 .slot {
-  display: inline-block; min-width: 130px; padding: 4px 8px; border-radius: 6px; font: inherit; font-size: 12.5px;
+  display: inline-block; min-width: 130px; padding: 4px 8px; border-radius: 4px; font: inherit; font-size: 12.5px;
   border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer;
 }
 .slot.free { color: var(--good); border-color: var(--good); background: var(--good-bg); }
@@ -122,7 +123,7 @@
 .slot:disabled { opacity: .5; cursor: not-allowed; }
 .day-slots .pill { white-space: normal; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px 2px 10px; border-radius: 999px; background: var(--bg); border: 1px solid var(--border); font-size: 12.5px; }
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px 2px 10px; border-radius: 3px; background: var(--bg); border: 1px solid var(--border); font-size: 12.5px; }
 .chip button { border: 0; background: none; color: var(--muted); cursor: pointer; font-size: 15px; line-height: 1; padding: 0 4px; border-radius: 50%; }
 .chip button:hover { color: var(--text); background: var(--border); }
 
@@ -137,12 +138,12 @@
 
 /* Bookings page: modal + forms */
 .ca-modal-backdrop { position: fixed; inset: 0; z-index: 900; background: rgba(0, 0, 0, .35); display: grid; place-items: center; padding: 16px; }
-.ca-modal { width: min(520px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; margin: 0; box-shadow: 0 16px 40px rgba(0, 0, 0, .25); }
+.ca-modal { border-top: 4px solid var(--primary); width: min(520px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; margin: 0; box-shadow: 0 16px 40px rgba(0, 0, 0, .25); }
 .ca-form { display: flex; flex-direction: column; gap: 12px; }
 .ca-form .row { display: flex; gap: 10px; }
 .ca-form .row .field { flex: 1; }
 .ca-form .field select, .ca-form .field input, .ca-form .field textarea { width: 100%; min-width: 0; }
-.ca-form textarea { font: inherit; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); resize: vertical; }
+.ca-form textarea { font: inherit; padding: 8px 10px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface); color: var(--text); resize: vertical; }
 .ca .lm-toolbar { margin-bottom: 12px; }
 .ca .lm-toolbar .lm-search { margin-left: auto; }
 @media (max-width: 560px) { .ca-form .row { flex-direction: column; } }

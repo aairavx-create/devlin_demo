@@ -332,23 +332,54 @@ function Leads() {
   const [openLead, setOpenLead] = useState<Lead | null>(null);
   const [menu, setMenu] = useState<{ lead: Lead; anchor: HTMLElement } | null>(null);
   const reqId = useRef(0);
+  const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
+  const lastTotal = useRef<number | null>(null);
 
-  const load = useCallback(async () => {
-    const id = ++reqId.current;
-    setLoading(true);
-    setError(null);
-    try {
-      const r = await api<Resp>('/api/leads', { query: { status, pageId, formId, search: q, page, pageSize: 25 } });
-      if (id === reqId.current) setData(r);
-    } catch (e: any) {
-      if (id === reqId.current) setError(e.message);
-    } finally {
-      if (id === reqId.current) setLoading(false);
-    }
-  }, [status, pageId, formId, q, page]);
+  // Reads leads from our database (no Meta call). Webhook leads land there within seconds,
+  // so this is all that's needed to see new leads. `silent` = background refresh: no spinner, keep errors quiet.
+  const load = useCallback(
+    async (silent = false) => {
+      const id = ++reqId.current;
+      if (!silent) {
+        setLoading(true);
+        setError(null);
+      }
+      try {
+        const r = await api<Resp>('/api/leads', { query: { status, pageId, formId, search: q, page, pageSize: 25 } });
+        if (id !== reqId.current) return;
+        const all = r.statusCounts?.ALL ?? r.total;
+        if (silent && lastTotal.current !== null && all > lastTotal.current) {
+          const n = all - lastTotal.current;
+          setNotice(`${n} new lead${n === 1 ? '' : 's'} arrived.`);
+        }
+        lastTotal.current = all;
+        setData(r);
+        setUpdatedAt(new Date());
+      } catch (e: any) {
+        if (id === reqId.current && !silent) setError(e.message);
+      } finally {
+        if (id === reqId.current && !silent) setLoading(false);
+      }
+    },
+    [status, pageId, formId, q, page],
+  );
 
   useEffect(() => {
+    lastTotal.current = null; // filters changed: don't count the new view as "new leads"
     void load();
+  }, [load]);
+
+  // Auto-refresh every 20s while the tab is visible, and as soon as the tab is shown again.
+  useEffect(() => {
+    const tick = () => {
+      if (document.visibilityState === 'visible') void load(true);
+    };
+    const timer = setInterval(tick, 20_000);
+    document.addEventListener('visibilitychange', tick);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', tick);
+    };
   }, [load]);
 
   useEffect(() => {
@@ -429,7 +460,20 @@ function Leads() {
         <button className="btn" onClick={() => data && downloadCsv(data.items)} disabled={!data?.items.length}>
           Export CSV
         </button>
-        <button className="btn btn-primary" onClick={sync} disabled={syncing}>
+        {updatedAt && (
+          <span className="muted" style={{ fontSize: 13 }} aria-live="polite">
+            Updated {updatedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+          </span>
+        )}
+        <button className="btn btn-primary" onClick={() => void load()} disabled={loading} title="Reload leads from the database. New leads arrive automatically.">
+          {loading ? 'Refreshing…' : 'Refresh'}
+        </button>
+        <button
+          className="btn"
+          onClick={sync}
+          disabled={syncing}
+          title="Pull leads directly from Meta. Use this if leads are missing, e.g. after the server was down."
+        >
           {syncing ? 'Syncing…' : 'Sync from Meta'}
         </button>
       </div>

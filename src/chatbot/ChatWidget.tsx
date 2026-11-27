@@ -26,6 +26,10 @@ export type ChatWidgetProps = {
   intro?: string;
   /** localStorage prefix; change it if two sites share a domain */
   storageKey?: string;
+  /** 'auto' follows the visitor's dark mode setting; 'light' keeps it light on light-only sites */
+  theme?: 'auto' | 'light';
+  /** Text next to the launcher icon (hidden on small screens) */
+  launcherLabel?: string;
 };
 
 const OPEN_EVENT = 'open-chat';
@@ -71,6 +75,8 @@ export default function ChatWidget({
   accentColor,
   intro = 'Book a measurement, ask about fitters and flooring, or talk to our team.',
   storageKey = 'site_chat',
+  theme = 'auto',
+  launcherLabel = 'Chat with us',
 }: Readonly<ChatWidgetProps>) {
   const endpoint = `${apiBase.replace(/\/$/, '')}/api/widget/chat`;
   const SID_KEY = `${storageKey}_session`;
@@ -268,7 +274,7 @@ export default function ChatWidget({
   const style = accentColor ? ({ '--cb-accent': accentColor } as CSSProperties) : undefined;
 
   return (
-    <div className={`cb-root${open ? ' cb-is-open' : ''}${paused ? ' cb-staff-mode' : ''}`} style={style}>
+    <div className={`cb-root${open ? ' cb-is-open' : ''}${paused ? ' cb-staff-mode' : ''}${theme === 'light' ? ' cb-light' : ''}`} style={style}>
       <button
         ref={launcherRef}
         className="cb-launcher"
@@ -280,12 +286,19 @@ export default function ChatWidget({
           setOpen((o) => !o);
         }}
       >
-        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
-          <path fill="currentColor" d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2z" />
-          <circle cx="9" cy="11" r="1.3" fill="var(--cb-accent)" />
-          <circle cx="12.5" cy="11" r="1.3" fill="var(--cb-accent)" />
-          <circle cx="16" cy="11" r="1.3" fill="var(--cb-accent)" />
-        </svg>
+        {open ? (
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" d="M6 6l12 12M18 6 6 18" />
+          </svg>
+        ) : (
+          <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+            <path fill="currentColor" d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2z" />
+            <circle cx="9" cy="11" r="1.3" fill="var(--cb-accent)" />
+            <circle cx="12.5" cy="11" r="1.3" fill="var(--cb-accent)" />
+            <circle cx="16" cy="11" r="1.3" fill="var(--cb-accent)" />
+          </svg>
+        )}
+        <span className="cb-launcher-text">{launcherLabel}</span>
         {unread > 0 && <span className="cb-badge">{unread > 9 ? '9+' : unread}</span>}
       </button>
 
@@ -319,7 +332,7 @@ export default function ChatWidget({
 
           {!sessionId ? (
             <div className="cb-start">
-              <p className="cb-start-title">Hi there!</p>
+              <p className="cb-start-title">Ask about floors or book a free measure</p>
               <p>{intro}</p>
               <label className="cb-check">
                 <input ref={consentRef} type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />

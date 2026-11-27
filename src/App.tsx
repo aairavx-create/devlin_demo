@@ -15,15 +15,17 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="brand">
-        <span className="brand-mark">M</span> Meta Dashboard
+        <strong>Devlin</strong>
+        <small>Staff dashboard</small>
       </div>
-      <nav>
+      <nav aria-label="Dashboard">
         <NavLink to="/" className="nav-link">
           <span className="nav-icon" aria-hidden>
             ⌂
           </span>
           Website
         </NavLink>
+        <span className="nav-sep" aria-hidden="true" />
         {links.map((l) => (
           <NavLink key={l.to} to={l.to} className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
             <span className="nav-icon" aria-hidden>
